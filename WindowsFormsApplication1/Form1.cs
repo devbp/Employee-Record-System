@@ -73,11 +73,19 @@ namespace WindowsFormsApplication1
         }
 
          void insertbutton_Click(object sender, EventArgs e)
-        {
-            age = Int32.Parse(textBox2.Text);
+         {
+
+            try
+            {
+                age = Int32.Parse(textBox2.Text);
+            }
+            catch(FormatException)
+            {
+                MessageBox.Show("Age should be integer");
+            }
             db.Insert(textBox1.Text,age,textBox3.Text); 
-            MessageBox.Show("");
-        }
+           
+          }
 
 
          void displaybutton_Click(object sender, EventArgs e)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 //Add MySql Library
 using MySql.Data.MySqlClient;
+using System.Windows.Forms;
 
 namespace MysqlConnector
 {
@@ -45,6 +46,7 @@ namespace MysqlConnector
             try
             {
                 connection.Open();
+                MessageBox.Show("Connection Established");
                 Console.WriteLine("connection established");
                 return true;
             }
@@ -80,6 +82,7 @@ namespace MysqlConnector
             catch (MySqlException ex)
             {
                 Console.WriteLine(ex.Message);
+                MessageBox.Show("Connection to database failed");
                 return false;
             }
 
@@ -94,8 +97,19 @@ namespace MysqlConnector
             cmd.Parameters.AddWithValue("@person", name);
             cmd.Parameters.AddWithValue("@personage", age);
             cmd.Parameters.AddWithValue("@personaddress", address);
-            MySqlDataReader dataReader = cmd.ExecuteReader();
-            dataReader.Close();
+            try
+            {
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+                dataReader.Close();
+            }
+            catch(System.InvalidOperationException)
+            {
+                MessageBox.Show("Invalid operation");
+                
+            }
+            
+            
+            
         }
 
         //Update statement
@@ -116,33 +130,50 @@ namespace MysqlConnector
             //Create a list to store the result
             List<string>[] list = new List<string>[3];
             list[0] = new List<string>();
+ 
             list[1] = new List<string>();
             list[2] = new List<string>();
             List<string> datalist = new List<string>();
             
                 //Create Command
                 MySqlCommand cmd = new MySqlCommand(query, connection);
-                //Create a data reader and Execute the command
-                
-                MySqlDataReader dataReader = cmd.ExecuteReader();
-                int i = 0;
-                //Read the data and store them in the list
-                while (dataReader.Read())
+            
+              
+            
+            
+            
+               
+            
+            
+            
+            
+//Create a data reader and Execute the command
+                try
                 {
-                    list[0].Add(dataReader["name"] + "");
-                    list[1].Add(dataReader["age"] + "");
-                    list[2].Add(dataReader["address"] + "");
-                    
-                    datalist.Add(dataReader["name"] + "");
-                   
-                    datalist.Add(dataReader["age"] + ""); 
-                    datalist.Add(dataReader["address"] + ""); 
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+                    int i = 0;
+                    //Read the dat/a and store them in the list
+                    while (dataReader.Read())
+                    {
+                        list[0].Add(dataReader["name"] + "");
+                        list[1].Add(dataReader["age"] + "");
+                        list[2].Add(dataReader["address"] + "");
+
+                        datalist.Add(dataReader["name"] + "");
+
+                        datalist.Add(dataReader["age"] + "");
+                        datalist.Add(dataReader["address"] + "");
+                    }
+
+                    //close Data Reader
+                    dataReader.Close();
+
                 }
-
-                //close Data Reader
-                dataReader.Close();
-
-                
+             catch(System.InvalidOperationException)
+                {
+                    MessageBox.Show("Invalid operation");
+                   
+             }
                 //close Connection
                 //this.CloseConnection();
 
